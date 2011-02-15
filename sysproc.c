@@ -4,14 +4,8 @@
 #include "param.h"
 #include "mmu.h"
 #include "proc.h"
-<<<<<<< HEAD
-#include "record.h"
-
-
-=======
 #include "recordlist.c"
 #define NULL (void*)0
->>>>>>> 3b2cb5cc4164eaf76bfe2c78ef3f917709156f97
 
 int
 sys_startrecording(){
@@ -46,77 +40,11 @@ sys_stoprecording(){
 int
 sys_fetchrecords(struct record *records, int num_records)
 {
-<<<<<<< HEAD
   //return print_records(records, num_records);
   return 0;
-=======
-<<<<<<< HEAD
-
-
- // print_records(records, num_records);
-  return 0;
-
-}
-
-typedef struct rnode recordnode;
-
-struct rnode
-{
-	struct record *rec;
-	struct rnode *next;
-};
-
-void add_record(struct rnode* rlist, struct record* re)
-{
-	struct rnode *cur = rlist;
-	while(cur->next != NULL)
-	{
-		cur = cur->next;
-	}
-	
-	struct rnode *newnode = (struct rnode*)kalloc();
-	newnode->rec = re;
-	newnode->next = NULL;
-	cur->next = newnode;
-}
-
-int print_records(struct record *records, int num_records)
-{
-	struct rnode *cur = proc->recordlist;
-	int count = 0;
-	
-	if (records != NULL)
-	{
-		while(cur->next != NULL)
-		{
-			if (count < num_records)
-			{
-				records[count] = *(cur->rec);
-				cur = cur->next;
-				count++;
-			}
-			else
-				break;
-		}
-	}
-	else
-	{
-		while (cur->next != NULL)
-		{
-			count++;
-		}
-		count++;
-	}
-	return count;
-=======
-  return print_records(records, num_records);
-  //return 0;
->>>>>>> c0d34dedf2a951d9fe9c3c6949318e6c17df2acc
   //if first arg is null return total number of records (not num_records) 
 
->>>>>>> 3b2cb5cc4164eaf76bfe2c78ef3f917709156f97
 }
-
 
 int
 sys_fork(void)
