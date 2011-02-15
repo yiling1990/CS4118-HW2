@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
   if (num_records == -1)
     handle_error("error fetching # of records\n");
 
+  printf(stdout,"Num records: %d\n", num_records);
   if (num_records != 2)
     handle_error("# of records is wrong\n");
 

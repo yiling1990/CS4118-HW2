@@ -176,15 +176,18 @@ syscall(void)
 {
   int num;
   num = proc->tf->eax;
-  if(num >= 0 && num < NELEM(syscalls) && syscalls[num]){
-    if(proc->logging == 1)
-    {
- 	struct record *rec;
-	rec = (struct record*)kalloc();
-	rec->type = SYSCALL_NO;
-	rec->value.intval = num;
-	add_record(rec);
+  cprintf("sys call num%d\n", num);
+  if(proc->logging == 1)
+  {
+    if(num < 22){
+ 	    struct record *rec;
+	    rec = (struct record*)kalloc();
+	    rec->type = SYSCALL_NO;
+	    rec->value.intval = num;
+	    add_record(rec);
     }
+  }
+  if(num >= 0 && num < NELEM(syscalls) && syscalls[num]){
     proc->tf->eax = syscalls[num]();
   }
   else {
