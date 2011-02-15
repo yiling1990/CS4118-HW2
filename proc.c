@@ -175,6 +175,8 @@ fork(void)
   }
   np->sz = proc->sz;
   np->parent = proc;
+  np->logging = proc->logging;
+  np->state = UNUSED;
   *np->tf = *proc->tf;
 
   // Clear %eax so that fork returns 0 in the child.
