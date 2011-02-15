@@ -25,6 +25,7 @@ fetchint(struct proc *p, uint addr, int *ip)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_INTEGER;
 	rec->value.intval = (int)ip;
+	add_record(proc->recordlist, rec);
     }
   return 0;
 }
@@ -46,6 +47,7 @@ fetchstr(struct proc *p, uint addr, char **pp)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_STRING;
 	rec->value.ptrval = pp;
+	add_record(proc->recordlist, rec);
   }
     
   for(s = *pp; s < ep; s++)
@@ -81,6 +83,7 @@ argptr(int n, char **pp, int size)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_POINTER;
 	rec->value.ptrval = pp;
+	add_record(proc->recordlist, rec);
     }
   return 0;
 }
