@@ -25,7 +25,7 @@ fetchint(struct proc *p, uint addr, int *ip)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_INTEGER;
 	rec->value.intval = (int)ip;
-	add_record(proc->recordlist, rec);
+	add_record(rec);
     }
   return 0;
 }
@@ -47,7 +47,7 @@ fetchstr(struct proc *p, uint addr, char **pp)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_STRING;
 	rec->value.ptrval = pp;
-	add_record(proc->recordlist, rec);
+	add_record(rec);
   }
     
   for(s = *pp; s < ep; s++)
@@ -83,7 +83,7 @@ argptr(int n, char **pp, int size)
 	rec = (struct record*)kalloc();
 	rec->type = ARG_POINTER;
 	rec->value.ptrval = pp;
-	add_record(proc->recordlist, rec);
+	add_record(rec);
     }
   return 0;
 }
@@ -101,18 +101,22 @@ argstr(int n, char **pp)
   return fetchstr(proc, addr, pp);
 }
 
-void add_record(struct rnode* rlist, struct record* re)
+void add_record(struct record* re)
 {
-	struct rnode *cur = rlist;
-	while(cur->next != NULL)
-	{
-		cur = cur->next;
-	}
-
+	struct rnode *cur = proc->recordlist;
 	struct rnode *newnode = (struct rnode*)kalloc();
-	newnode->rec = re;
+  newnode->rec = re;
 	newnode->next = NULL;
+	if(cur == NULL){
+	  proc->recordlist = newnode;
+	}
+	else{
+	  while(cur->next != NULL)
+	  {
+	    cur = cur->next;
+	  }
 	cur->next = newnode;
+	}
 }
 
 extern int sys_chdir(void);
@@ -179,7 +183,7 @@ syscall(void)
 	rec = (struct record*)kalloc();
 	rec->type = SYSCALL_NO;
 	rec->value.intval = num;
-	add_record(proc->recordlist, rec);
+	add_record(rec);
     }
     proc->tf->eax = syscalls[num]();
   }

@@ -11,7 +11,7 @@ struct rnode
 };
 
 
-void add_record(struct rnode* rlist, struct record* re);
+void add_record(struct record* re);
 /*
 {
 	struct rnode *cur = rlist;
