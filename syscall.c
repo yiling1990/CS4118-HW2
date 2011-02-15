@@ -6,7 +6,7 @@
 #include "x86.h"
 #include "syscall.h"
 #include "record.h"
-//#include "recordlist.h"
+//#include "recordlist.c"
 
 
 // User code makes a system call with INT T_SYSCALL.
@@ -22,6 +22,12 @@ fetchint(struct proc *p, uint addr, int *ip)
   if(addr >= p->sz || addr+4 > p->sz)
     return -1;
   *ip = *(int*)(addr);
+   if(proc->logging == 1){
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = ARG_INTEGER;
+	rec->value.intval = (int)ip;
+    }
   return 0;
 }
 
@@ -37,9 +43,17 @@ fetchstr(struct proc *p, uint addr, char **pp)
     return -1;
   *pp = (char *) addr;
   ep = (char *) p->sz;
+  if(proc->logging == 1){
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = ARG_STRING;
+	rec->value.ptrval = pp;
+  }
+    
   for(s = *pp; s < ep; s++)
-    if(*s == 0)
+    if(*s == 0){ 
       return s - *pp;
+    }
   return -1;
 }
 
@@ -61,9 +75,15 @@ argptr(int n, char **pp, int size)
   
   if(argint(n, &i) < 0)
     return -1;
-  if((uint)i >= proc->sz || (uint)i+size >= proc->sz)
+  if((uint)i >= proc->sz || (uint)i+size > proc->sz)
     return -1;
   *pp = (char *) i;
+   if(proc->logging == 1){
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = ARG_POINTER;
+	rec->value.ptrval = pp;
+    }
   return 0;
 }
 

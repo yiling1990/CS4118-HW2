@@ -40,8 +40,8 @@ sys_stoprecording(){
 int
 sys_fetchrecords(struct record *records, int num_records)
 {
-  //return print_records(records, num_records);
-  return 0;
+  return fetchrecords(records, num_records);
+  //return 0;
   //if first arg is null return total number of records (not num_records) 
 
 }

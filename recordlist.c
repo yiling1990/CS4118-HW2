@@ -25,14 +25,13 @@ void add_record(struct rnode* rlist, struct record* re)
 	cur->next = newnode;
 }
 
-int print_records(struct record *records, int num_records)
+int fetchrecords(struct record *records, int num_records)
 {
 	struct rnode *cur = proc->recordlist;
 	int count = 0;
-	
 	if (records != NULL)
 	{
-		while(cur->next != NULL)
+		while(cur != NULL)
 		{
 			if (count < num_records)
 			{
@@ -46,11 +45,12 @@ int print_records(struct record *records, int num_records)
 	}
 	else
 	{
-		while (cur->next != NULL)
+		while (cur != NULL)
 		{
 			count++;
+			cur = cur->next;
 		}
-		count++;
+
 	}
 	return count;
 }

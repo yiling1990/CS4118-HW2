@@ -169,7 +169,7 @@ void            switchkvm();
 
 // recordlist.c
 //void		add_record(struct rnode*, struct record*);
-//int		print_records(struct record*, int);
+//int		fetchrecords(struct record*, int);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
