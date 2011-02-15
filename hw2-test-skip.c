@@ -16,7 +16,6 @@ int main(int argc, char *argv[]) {
   num_records = fetchrecords(0, 0);
   if (num_records == -1)
     handle_error("error fetching # of records\n");
-
   if (num_records != 0)
     handle_error("# of records is wrong\n");
 
