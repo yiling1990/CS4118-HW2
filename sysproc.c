@@ -144,6 +144,8 @@ int fetchrecords(struct record *records, int num_records)
 
 				cprintf("syscalltype:%d\n", (&records[count])->type);
 				cprintf("syscall#:%d\n", (&records[count])->value);
+				cprintf("Record type: %d", cur->rec->type);
+				records[count] = *(cur->rec);
 				cur = cur->next;
 				count++;
 			}
@@ -157,6 +159,7 @@ int fetchrecords(struct record *records, int num_records)
 		{
 			count++;
 			cprintf("syscall#:%d\n", records[count].type);
+			cprintf("Record type2: %d", cur->rec->type);
 			cur = cur->next;
 		}
 

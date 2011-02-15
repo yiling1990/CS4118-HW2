@@ -3,7 +3,7 @@
 #include "param.h"
 #include "mmu.h"
 #include "x86.h"
-#include "proc.h"
+#include "recordlist.h"
 #include "spinlock.h"
 
 struct {
@@ -200,6 +200,9 @@ void
 exit(void)
 {
   struct proc *p;
+  struct rnode *cur;
+  struct rnode *next;
+  struct rnode *temp;
   int fd;
 
   if(proc == initproc)
@@ -229,6 +232,17 @@ exit(void)
         wakeup1(initproc);
     }
   }
+    cur = proc->recordlist;
+    while(cur != 0)
+	  { 
+     cprintf("began freeing recordnode");
+     temp = cur;
+     next = cur->next;
+     //kfree((char *)temp->rec);
+     //kfree((char *)temp);
+	   cur = cur->next;
+     cprintf("finished freeing recordnode");
+	  }
 
   // Jump into the scheduler, never to return.
   proc->state = ZOMBIE;
@@ -424,12 +438,23 @@ wakeup(void *chan)
 int
 kill(int pid)
 {
+          cprintf("In kill");
   struct proc *p;
+  struct rnode *cur;
+  struct rnode *next;
 
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
       p->killed = 1;
+      cur = p->recordlist;
+      while(cur != 0)
+	    { 
+        cprintf("Freeing record");
+        next = cur->next;
+        kfree((char *)cur);
+	      cur = cur->next;
+	    }
       // Wake process from sleep if necessary.
       if(p->state == SLEEPING)
         p->state = RUNNABLE;
