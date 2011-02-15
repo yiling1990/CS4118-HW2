@@ -1,4 +1,5 @@
 #include "defs.h"
+#include "record.h"
 #define NULL (void*)0
 
 
