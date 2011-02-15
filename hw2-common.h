@@ -6,7 +6,7 @@ int stderr = 2;
 
 
 inline void handle_error(const char *msg) {
-  printf(stderr, "%s\n", msg);
+  printf(stdout, "%s\n", msg);
   exit();
 }
 
