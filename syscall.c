@@ -105,7 +105,7 @@ void add_record(struct record* re)
 {
 	struct rnode *cur = proc->recordlist;
 	struct rnode *newnode = (struct rnode*)kalloc();
-  newnode->rec = re;
+  	newnode->rec = *re;
 	newnode->next = NULL;
 	if(cur == NULL){
 	  proc->recordlist = newnode;
@@ -187,13 +187,12 @@ syscall(void)
 	    add_record(rec);
     }
   }
-  if(num >= 0 && num < NELEM(syscalls) && syscalls[num])
+  if(num > 0 && num < NELEM(syscalls) && syscalls[num])
   {
     proc->tf->eax = syscalls[num]();
-    int retval = proc->tf->eax;
-   //if(num<22 && retval != 0)
-   if(num<22)
+   if(num<22 && proc->logging == 1)
    {
+    int retval = proc->tf->eax;
     struct record *rec1;
     rec1 = (struct record*)kalloc();
     rec1->type = RET_VALUE;
@@ -206,13 +205,6 @@ syscall(void)
             proc->pid, proc->name, num);
     proc->tf->eax = -1;
   }
- /* 
-    struct record *rec1;
-    rec1 = (struct record*)kalloc();
-    rec1->type = RET_VALUE;
-    rec1->value.intval = (proc->tf->eax);
-    add_record(rec1);
-  */  
 }
 
 

@@ -6,7 +6,7 @@
 
 struct rnode
 {
-	struct record *rec;
+	struct record rec;
 	struct rnode *next;
 };
 

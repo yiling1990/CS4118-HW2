@@ -17,6 +17,7 @@ inline void check_syscall_no(const struct record *r, int n) {
 }
 
 inline void check_ret_value(const struct record *r, int v) {
+   printf(stdout, "type: %d actual no: %d correctnum: %d\n", r->type,r->value.intval, v);
   if (r->type != RET_VALUE || r->value.intval != v)
     handle_error("error check_ret_value");
 }

@@ -131,13 +131,19 @@ int fetchrecords(struct record *records, int num_records)
 {
 	struct rnode *cur = proc->recordlist;
 	int count = 0;
-	if (records != NULL)
+	if (records != 0)
 	{
 		while(cur != NULL)
 		{
+			//cprintf("%d\n", cur->rec);
+			//cprintf("%d\n", cur->rec.value);
 			if (count < num_records)
 			{
-				records[count] = *(cur->rec);
+				records[count] = cur->rec;
+				cprintf("count:%d\n", count);
+
+				cprintf("syscalltype:%d\n", (&records[count])->type);
+				cprintf("syscall#:%d\n", (&records[count])->value);
 				cur = cur->next;
 				count++;
 			}
@@ -150,6 +156,7 @@ int fetchrecords(struct record *records, int num_records)
 		while (cur != NULL)
 		{
 			count++;
+			cprintf("syscall#:%d\n", records[count].type);
 			cur = cur->next;
 		}
 
