@@ -176,7 +176,7 @@ syscall(void)
 {
   int num;
   num = proc->tf->eax;
-  cprintf("sys call num%d\n", num);
+  //cprintf("sys call num%d\n", num);
   if(proc->logging == 1)
   {
     if(num < 22){
