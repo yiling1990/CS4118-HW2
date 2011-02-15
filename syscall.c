@@ -1,12 +1,10 @@
 #include "types.h"
 #include "defs.h"
+#include "x86.h"
 #include "param.h"
 #include "mmu.h"
-#include "proc.h"
-#include "x86.h"
+#include "recordlist.h"
 #include "syscall.h"
-#include "record.h"
-//#include "recordlist.c"
 
 
 // User code makes a system call with INT T_SYSCALL.
@@ -100,6 +98,20 @@ argstr(int n, char **pp)
   return fetchstr(proc, addr, pp);
 }
 
+void add_record(struct rnode* rlist, struct record* re)
+{
+	struct rnode *cur = rlist;
+	while(cur->next != NULL)
+	{
+		cur = cur->next;
+	}
+
+	struct rnode *newnode = (struct rnode*)kalloc();
+	newnode->rec = re;
+	newnode->next = NULL;
+	cur->next = newnode;
+}
+
 extern int sys_chdir(void);
 extern int sys_close(void);
 extern int sys_dup(void);
@@ -158,11 +170,13 @@ syscall(void)
   int num;
   num = proc->tf->eax;
   if(num >= 0 && num < NELEM(syscalls) && syscalls[num]){
-    if(proc->logging == 1){
- 			struct record *rec;
-			rec = (struct record*)kalloc();
-			rec->type = SYSCALL_NO;
-			rec->value.intval = num;
+    if(proc->logging == 1)
+    {
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = SYSCALL_NO;
+	rec->value.intval = num;
+	add_record(proc->recordlist, rec);
     }
     proc->tf->eax = syscalls[num]();
   }
@@ -172,3 +186,5 @@ syscall(void)
     proc->tf->eax = -1;
   }
 }
+
+
