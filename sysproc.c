@@ -17,7 +17,7 @@ sys_startrecording(){
   else
   {
     proc->logging = 1;
-    add_record(NULL, NULL);
+    //add_record(NULL, NULL);
     return 0;
   }
 }
@@ -40,8 +40,8 @@ sys_stoprecording(){
 int
 sys_fetchrecords(struct record *records, int num_records)
 {
-  return print_records(records, num_records);
-  //return 0;
+  //return print_records(records, num_records);
+  return 0;
   //if first arg is null return total number of records (not num_records) 
 
 }

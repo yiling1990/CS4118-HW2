@@ -6,7 +6,7 @@ int stderr = 2;
 
 
 inline void handle_error(const char *msg) {
-  printf(stderr, "%s\n", msg);
+  printf(stdout, "%s\n", msg);
   exit();
 }
 
@@ -29,7 +29,8 @@ inline void check_arg_pointer(const struct record *r, void *p) {
   // Pointer values differs form machine to machine. 
   // Do not count on it. 
   if (r->type != ARG_POINTER/* || r->value.ptrval != p */) {
-    printf(stderr, "actual %p, expected %p\n", r->value.ptrval, p);
+    printf(stdout, "actual %p, expected %p\n", r->value.ptrval, p);
+
     handle_error("error check_arg_pointer");
   }
 }
