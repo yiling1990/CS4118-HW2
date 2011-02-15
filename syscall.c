@@ -6,7 +6,6 @@
 #include "x86.h"
 #include "syscall.h"
 #include "record.h"
-//#include "recordlist.h"
 
 
 // User code makes a system call with INT T_SYSCALL.
@@ -138,11 +137,13 @@ syscall(void)
   int num;
   num = proc->tf->eax;
   if(num >= 0 && num < NELEM(syscalls) && syscalls[num]){
-    if(proc->logging == 1){
- 			struct record *rec;
-			rec = (struct record*)kalloc();
-			rec->type = SYSCALL_NO;
-			rec->value.intval = num;
+    if(proc->logging == 1)
+    {
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = SYSCALL_NO;
+	rec->value.intval = num;
+	//add_record(proc->recordlist, rec);
     }
     proc->tf->eax = syscalls[num]();
   }

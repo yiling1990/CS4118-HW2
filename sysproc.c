@@ -3,8 +3,7 @@
 #include "defs.h"
 #include "param.h"
 #include "mmu.h"
-#include "proc.h"
-#include "recordlist.c"
+#include "recordlist.h"
 #define NULL (void*)0
 
 int
@@ -40,7 +39,7 @@ sys_stoprecording(){
 int
 sys_fetchrecords(struct record *records, int num_records)
 {
-  //return print_records(records, num_records);
+  return print_records(records, num_records);
   return 0;
   //if first arg is null return total number of records (not num_records) 
 
