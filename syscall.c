@@ -176,7 +176,7 @@ syscall(void)
 {
   int num;
   num = proc->tf->eax;
-  cprintf("sys call num%d\n", num);
+  //cprintf("sys call num%d\n", num);
   if(proc->logging == 1)
   {
     if(num < 22){
@@ -187,14 +187,32 @@ syscall(void)
 	    add_record(rec);
     }
   }
-  if(num >= 0 && num < NELEM(syscalls) && syscalls[num]){
+  if(num >= 0 && num < NELEM(syscalls) && syscalls[num])
+  {
     proc->tf->eax = syscalls[num]();
+    int retval = proc->tf->eax;
+   //if(num<22 && retval != 0)
+   if(num<22)
+   {
+    struct record *rec1;
+    rec1 = (struct record*)kalloc();
+    rec1->type = RET_VALUE;
+    rec1->value.intval = retval;
+    add_record(rec1);
+   }
   }
   else {
     cprintf("%d %s: unknown sys call %d\n",
             proc->pid, proc->name, num);
     proc->tf->eax = -1;
   }
+ /* 
+    struct record *rec1;
+    rec1 = (struct record*)kalloc();
+    rec1->type = RET_VALUE;
+    rec1->value.intval = (proc->tf->eax);
+    add_record(rec1);
+  */  
 }
 
 
