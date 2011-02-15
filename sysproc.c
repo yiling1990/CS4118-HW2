@@ -3,6 +3,7 @@
 #include "defs.h"
 #include "param.h"
 #include "mmu.h"
+//#include "proc.h"
 #include "recordlist.h"
 #define NULL (void*)0
 
@@ -16,7 +17,6 @@ sys_startrecording(){
   else
   {
     proc->logging = 1;
-    //add_record(NULL, NULL);
     return 0;
   }
 }
@@ -126,4 +126,34 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int print_records(struct record *records, int num_records)
+{
+	struct rnode *cur = proc->recordlist;
+	int count = 0;
+
+	if (records != NULL)
+	{
+		while(cur->next != NULL)
+		{
+			if (count < num_records)
+			{
+				records[count] = *(cur->rec);
+				cur = cur->next;
+				count++;
+			}
+			else
+				break;
+		}
+	}
+	else
+	{
+		while(cur->next != NULL)
+		{
+			count++;
+		}
+		count++;
+	}
+	return count;
 }
