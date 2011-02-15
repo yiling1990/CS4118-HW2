@@ -4,8 +4,6 @@
 #include "param.h"
 #include "mmu.h"
 #include "recordlist.h"
-//#include "record.h"
-//#include "proc.h"
 #include "syscall.h"
 
 
