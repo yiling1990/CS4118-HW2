@@ -36,9 +36,15 @@ sys_stoprecording(){
 }
 
 int
-sys_fetchrecords(struct record *records, int num_records)
+sys_fetchrecords(void)
 {
-  cprintf("sys_fetchrecords Records argument: %d\n",records);
+  struct record *records;
+  int num_records;
+  //cprintf("sys_fetchrecords Records argument: %d\n",records);
+  if(argptr(0,(void*)&records,sizeof(*records)) < 0)
+    return -1;
+  if(argint(1, &num_records) < 0)
+    return -1;
   return fetchrecords(records, num_records);
   //return 0;
   //if first arg is null return total number of records (not num_records) 
