@@ -200,9 +200,9 @@ void
 exit(void)
 {
   struct proc *p;
-  struct rnode *cur;
-  struct rnode *next;
-  struct rnode *temp;
+  //struct rnode *cur;
+  //struct rnode *next;
+  //struct rnode *temp;
   int fd;
 
   if(proc == initproc)
@@ -232,17 +232,19 @@ exit(void)
         wakeup1(initproc);
     }
   }
+    /*
     cur = proc->recordlist;
     while(cur != 0)
 	  { 
-     cprintf("began freeing recordnode");
+     cprintf("began freeing recordnode ");
      temp = cur;
      next = cur->next;
-     //kfree((char *)temp->rec);
-     //kfree((char *)temp);
+     temp->rec = 0;
+     temp = 0;
 	   cur = cur->next;
-     cprintf("finished freeing recordnode");
+     cprintf("finished freeing recordnode\n");
 	  }
+	*/
 
   // Jump into the scheduler, never to return.
   proc->state = ZOMBIE;
@@ -440,14 +442,15 @@ kill(int pid)
 {
           cprintf("In kill");
   struct proc *p;
-  struct rnode *cur;
-  struct rnode *next;
+  //struct rnode *cur;
+  //struct rnode *next;
 
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
       p->killed = 1;
-      cur = p->recordlist;
+      //cur = p->recordlist;
+/*
       while(cur != 0)
 	    { 
         cprintf("Freeing record");
@@ -455,6 +458,7 @@ kill(int pid)
         kfree((char *)cur);
 	      cur = cur->next;
 	    }
+*/
       // Wake process from sleep if necessary.
       if(p->state == SLEEPING)
         p->state = RUNNABLE;

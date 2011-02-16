@@ -38,6 +38,7 @@ sys_stoprecording(){
 int
 sys_fetchrecords(struct record *records, int num_records)
 {
+  cprintf("sys_fetchrecords Records argument: %d\n",records);
   return fetchrecords(records, num_records);
   //return 0;
   //if first arg is null return total number of records (not num_records) 
@@ -129,23 +130,36 @@ sys_uptime(void)
 
 int fetchrecords(struct record *records, int num_records)
 {
+	cprintf("Records argument: %d",records);
 	struct rnode *cur = proc->recordlist;
+	struct record *curRecord;
 	int count = 0;
 	if (records != 0)
 	{
-		while(cur != NULL)
+		cprintf("Copying records\n");
+		while(cur != NULL && cur != 0)
 		{
 			//cprintf("%d\n", cur->rec);
 			//cprintf("%d\n", cur->rec.value);
 			if (count < num_records)
 			{
-				records[count] = cur->rec;
-				cprintf("count:%d\n", count);
-
+				curRecord = cur->rec;
+				records[count] = *curRecord;
+				cprintf("\ncount:%d\n", count);
+				cprintf("Memory location: %d\n", &records[count]);
 				cprintf("syscalltype:%d\n", (&records[count])->type);
-				cprintf("syscall#:%d\n", (&records[count])->value);
-				cprintf("Record type: %d", cur->rec->type);
-				records[count] = *(cur->rec);
+				int type = (&records[count])->type;
+				if(type == 0)
+					cprintf("syscall #:%d\n", (&records[count])->value.intval);
+				if(type == 1)
+					cprintf("syscall int:%d\n", (&records[count])->value.intval);
+				if(type == 2)
+					cprintf("syscall ptr:%d\n", (&records[count])->value.ptrval);
+				if(type == 3)
+					cprintf("syscall str:%s\n", (&records[count])->value.strval);
+				if(type == 4)
+					cprintf("syscall return val:%d\n", (&records[count])->value.intval);
+				records[count] = *curRecord;
 				cur = cur->next;
 				count++;
 			}
@@ -155,14 +169,17 @@ int fetchrecords(struct record *records, int num_records)
 	}
 	else
 	{
+		cprintf("Counting records\n");
 		while (cur != NULL)
 		{
 			count++;
 			cprintf("syscall#:%d\n", records[count].type);
-			cprintf("Record type2: %d", cur->rec->type);
+			curRecord = cur->rec;
+			cprintf("Record type2: %d", curRecord->type);
 			cur = cur->next;
 		}
 
 	}
+	cprintf("NumRecordsReturned: %d\n",count);
 	return count;
 }

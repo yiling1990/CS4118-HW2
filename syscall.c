@@ -6,6 +6,8 @@
 #include "recordlist.h"
 #include "syscall.h"
 
+int fetchInt = 0;
+
 
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
@@ -20,13 +22,6 @@ fetchint(struct proc *p, uint addr, int *ip)
   if(addr >= p->sz || addr+4 > p->sz)
     return -1;
   *ip = *(int*)(addr);
-   if(proc->logging == 1){
- 	struct record *rec;
-	rec = (struct record*)kalloc();
-	rec->type = ARG_INTEGER;
-	rec->value.intval = (int)ip;
-	add_record(rec);
-    }
   return 0;
 }
 
@@ -42,14 +37,6 @@ fetchstr(struct proc *p, uint addr, char **pp)
     return -1;
   *pp = (char *) addr;
   ep = (char *) p->sz;
-  if(proc->logging == 1){
- 	struct record *rec;
-	rec = (struct record*)kalloc();
-	rec->type = ARG_STRING;
-	rec->value.ptrval = pp;
-	add_record(rec);
-  }
-    
   for(s = *pp; s < ep; s++)
     if(*s == 0){ 
       return s - *pp;
@@ -62,6 +49,13 @@ int
 argint(int n, int *ip)
 {
   int x = fetchint(proc, proc->tf->esp + 4 + 4*n, ip);
+  if(proc->logging == 1 && fetchInt == 0){
+ 	struct record *rec;
+	rec = (struct record*)kalloc();
+	rec->type = ARG_INTEGER;
+	rec->value.intval = *ip;
+	add_record(rec);
+  }
   return x;
 }
 
@@ -73,8 +67,10 @@ argptr(int n, char **pp, int size)
 {
   int i;
   
+  fetchInt = 1;
   if(argint(n, &i) < 0)
     return -1;
+  fetchInt = 0;
   if((uint)i >= proc->sz || (uint)i+size > proc->sz)
     return -1;
   *pp = (char *) i;
@@ -96,16 +92,45 @@ int
 argstr(int n, char **pp)
 {
   int addr;
+  char arg[20];
+  char *s;
+  int ind;
+  fetchInt = 1;
   if(argint(n, &addr) < 0)
     return -1;
-  return fetchstr(proc, addr, pp);
+  fetchInt = 0;
+  int strlen = fetchstr(proc, addr, pp);
+  s = *pp;
+ 
+  for(ind=0; ind<20; ind++)
+  {
+     arg[ind] = *s;
+     s++;
+  }
+
+  if(proc->logging == 1)
+  {
+      struct record *rec;
+      rec = (struct record*)kalloc();
+      rec->type = ARG_STRING;
+      for (ind=0; ind<19; ind++)
+      {
+          rec->value.strval[ind] = arg[ind];
+      }
+      rec->value.strval[ind] = '\0';
+      add_record(rec);
+  }
+  return strlen;
 }
+
+
+
 
 void add_record(struct record* re)
 {
 	struct rnode *cur = proc->recordlist;
 	struct rnode *newnode = (struct rnode*)kalloc();
-  	newnode->rec = *re;
+  	newnode->rec = re;
 	newnode->next = NULL;
 	if(cur == NULL){
 	  proc->recordlist = newnode;

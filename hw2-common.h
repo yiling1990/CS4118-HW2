@@ -11,7 +11,7 @@ inline void handle_error(const char *msg) {
 }
 
 inline void check_syscall_no(const struct record *r, int n) {
-    printf(stdout, "type: %d actual no: %d correctnum: %d\n", r->type,r->value.intval, n);
+    printf(stdout, "type: %d actualnum: %d correctnum: %d\n Correct Memory Location: %d\n", r->type,r->value.intval, n, r);
   if (r->type != SYSCALL_NO || r->value.intval != n)
     handle_error("error check_syscall_no");
 }

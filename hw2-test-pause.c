@@ -34,8 +34,13 @@ int main(int argc, char *argv[]) {
   records = malloc(sizeof(struct record) * num_records);
   if (!records)
     handle_error("error malloc");
-
+	
+  printf(stdout, "\nTrying to pass array at: %d\n", records);	
   ret = fetchrecords(records, num_records);
+  printf(stdout, "Record 0 fetched type: %d\n",(&records[0])->type);
+  printf(stdout, "Record 0 fetched value: %d\n",(&records[0])->value);
+  printf(stdout, "Record 1 fetched type: %d\n",(&records[1])->type);
+  printf(stdout, "Record 1 fetched value: %d\n",(&records[1])->value);
   if (ret == -1)
     handle_error("error fetchrecords");
 
